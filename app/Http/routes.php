@@ -11,6 +11,35 @@
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
+});*/
+
+//RESFUL API
+/*Route::group(['prefix' => '/api/v1/'],function($api){
+    Route::resource('weathers',"WeathersController");
+});*/
+
+$api = app('Dingo\Api\Routing\Router');
+
+
+
+$api->version('v1', function ($api) {
+    $api->group(['namespace' => 'App\Api\Controllers'],function($api){
+        //登录路由
+        $api->post('/login',"AuthenticateController@authenticate");
+
+        //注册路由
+        $api->post('/register',"AuthenticateController@register");
+
+        $api->group(['middleware' => 'jwt.auth'],function($api){
+            $api->resource('weathers',"WeathersController");
+        });
+
+
+    });
 });
+
+
+
+
